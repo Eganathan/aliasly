@@ -1,0 +1,32 @@
+# Binaries
+al
+al-*
+*.exe
+
+# Go build artifacts
+*.o
+*.a
+*.so
+
+# Test binary
+*.test
+
+# Output of go coverage
+*.out
+
+# Dependency directories
+vendor/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local config (for testing)
+config.yaml
