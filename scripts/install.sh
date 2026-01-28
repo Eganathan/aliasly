@@ -5,7 +5,7 @@
 set -e
 
 # Configuration
-REPO="yourusername/aliasly"  # Change this to your GitHub username
+REPO="Eganathan/aliasly"
 INSTALL_DIR="/usr/local/bin"
 BINARY_NAME="al"
 
