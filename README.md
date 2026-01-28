@@ -26,19 +26,19 @@ al gc "fix login bug"
 
 **macOS / Linux:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yourusername/aliasly/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Eganathan/aliasly/refs/heads/master/scripts/install.sh | bash
 ```
 
 ### Download Binary
 
-Download the latest release for your platform from [Releases](https://github.com/yourusername/aliasly/releases):
+Download the latest release for your platform from [Releases](https://github.com/Eganathan/aliasly/releases):
 
 | Platform | Download |
 |----------|----------|
-| macOS (Apple Silicon) | [al-darwin-arm64.zip](https://github.com/yourusername/aliasly/releases/latest/download/al-darwin-arm64.zip) |
-| macOS (Intel) | [al-darwin-amd64.zip](https://github.com/yourusername/aliasly/releases/latest/download/al-darwin-amd64.zip) |
-| Linux (x86_64) | [al-linux-amd64.tar.gz](https://github.com/yourusername/aliasly/releases/latest/download/al-linux-amd64.tar.gz) |
-| Linux (ARM64) | [al-linux-arm64.tar.gz](https://github.com/yourusername/aliasly/releases/latest/download/al-linux-arm64.tar.gz) |
+| macOS (Apple Silicon) | [al-darwin-arm64.zip](https://github.com/Eganathan/aliasly/releases/latest/download/al-darwin-arm64.zip) |
+| macOS (Intel) | [al-darwin-amd64.zip](https://github.com/Eganathan/aliasly/releases/latest/download/al-darwin-amd64.zip) |
+| Linux (x86_64) | [al-linux-amd64.tar.gz](https://github.com/Eganathan/aliasly/releases/latest/download/al-linux-amd64.tar.gz) |
+| Linux (ARM64) | [al-linux-arm64.tar.gz](https://github.com/Eganathan/aliasly/releases/latest/download/al-linux-arm64.tar.gz) |
 
 Then:
 ```bash
@@ -56,7 +56,7 @@ sudo mv al-linux-* /usr/local/bin/al
 Requires [Go 1.21+](https://go.dev/dl/)
 
 ```bash
-git clone https://github.com/yourusername/aliasly.git
+git clone https://github.com/Eganathan/aliasly.git
 cd aliasly
 go build -o al .
 sudo mv al /usr/local/bin/
