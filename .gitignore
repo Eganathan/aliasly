@@ -3,6 +3,9 @@ al
 al-*
 *.exe
 
+# Build output
+dist/
+
 # Go build artifacts
 *.o
 *.a

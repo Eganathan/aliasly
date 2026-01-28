@@ -22,30 +22,50 @@ al gc "fix login bug"
 
 ## Installation
 
-### From Source
+### Quick Install (Recommended)
+
+**macOS / Linux:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/yourusername/aliasly/main/scripts/install.sh | bash
+```
+
+### Download Binary
+
+Download the latest release for your platform from [Releases](https://github.com/yourusername/aliasly/releases):
+
+| Platform | Download |
+|----------|----------|
+| macOS (Apple Silicon) | [al-darwin-arm64.zip](https://github.com/yourusername/aliasly/releases/latest/download/al-darwin-arm64.zip) |
+| macOS (Intel) | [al-darwin-amd64.zip](https://github.com/yourusername/aliasly/releases/latest/download/al-darwin-amd64.zip) |
+| Linux (x86_64) | [al-linux-amd64.tar.gz](https://github.com/yourusername/aliasly/releases/latest/download/al-linux-amd64.tar.gz) |
+| Linux (ARM64) | [al-linux-arm64.tar.gz](https://github.com/yourusername/aliasly/releases/latest/download/al-linux-arm64.tar.gz) |
+
+Then:
+```bash
+# macOS
+unzip al-darwin-*.zip
+sudo mv al-darwin-* /usr/local/bin/al
+
+# Linux
+tar -xzf al-linux-*.tar.gz
+sudo mv al-linux-* /usr/local/bin/al
+```
+
+### Build from Source
 
 Requires [Go 1.21+](https://go.dev/dl/)
 
 ```bash
-# Clone the repository
 git clone https://github.com/yourusername/aliasly.git
 cd aliasly
-
-# Build
 go build -o al .
-
-# Move to PATH (optional)
 sudo mv al /usr/local/bin/
 ```
-
-### Pre-built Binaries
-
-Download from the [Releases](https://github.com/yourusername/aliasly/releases) page.
 
 ## Quick Start
 
 ```bash
-# List all aliases
+# List all aliases (includes some defaults)
 al list
 
 # Run an alias
@@ -156,9 +176,11 @@ Usage: `al deploy production` or `al deploy staging v1.2.3`
 
 The config file location follows XDG standards:
 
-1. `$ALIASLY_CONFIG_DIR/config.yaml` (if set)
-2. `$XDG_CONFIG_HOME/aliasly/config.yaml`
-3. `~/.config/aliasly/config.yaml` (default)
+| Priority | Location |
+|----------|----------|
+| 1 | `$ALIASLY_CONFIG_DIR/config.yaml` |
+| 2 | `$XDG_CONFIG_HOME/aliasly/config.yaml` |
+| 3 | `~/.config/aliasly/config.yaml` (default) |
 
 ## Web Configuration UI
 
@@ -170,7 +192,7 @@ Run `al config` to open a browser-based interface for managing aliases:
 - Delete aliases with confirmation
 - Auto-detects parameters from `{{placeholders}}`
 
-The web server runs locally and shuts down when you press `Ctrl+C`.
+The web server runs locally on a random port and shuts down when you press `Ctrl+C`.
 
 ## Example Aliases
 
@@ -181,30 +203,22 @@ aliases:
   # Git shortcuts
   - name: gs
     command: git status
-    description: Git status
-
   - name: gd
     command: git diff
-    description: Git diff
-
+  - name: gl
+    command: git log --oneline -20
   - name: gc
     command: git commit -am "{{message}}"
-    description: Git commit with message
     params:
       - name: message
         required: true
-
   - name: gp
     command: git push origin {{branch}}
-    description: Push to branch
     params:
       - name: branch
-        required: false
         default: main
-
   - name: gco
     command: git checkout {{branch}}
-    description: Switch branch
     params:
       - name: branch
         required: true
@@ -212,59 +226,52 @@ aliases:
   # Docker shortcuts
   - name: dps
     command: docker ps
-    description: List containers
-
   - name: dex
     command: docker exec -it {{container}} {{cmd}}
-    description: Execute in container
     params:
       - name: container
         required: true
       - name: cmd
-        required: false
         default: bash
 
   # Development
   - name: serve
     command: python -m http.server {{port}}
-    description: Start HTTP server
     params:
       - name: port
-        required: false
         default: "8000"
-```
 
-## Building from Source
-
-```bash
-# Clone
-git clone https://github.com/yourusername/aliasly.git
-cd aliasly
-
-# Build for current platform
-go build -o al .
-
-# Build for all platforms
-GOOS=darwin GOARCH=amd64 go build -o al-darwin-amd64 .
-GOOS=darwin GOARCH=arm64 go build -o al-darwin-arm64 .
-GOOS=linux GOARCH=amd64 go build -o al-linux-amd64 .
-GOOS=linux GOARCH=arm64 go build -o al-linux-arm64 .
+  # System
+  - name: ports
+    command: lsof -i -P -n | grep LISTEN
 ```
 
 ## Shell Completion
 
-Generate shell completion scripts:
+Generate shell completion scripts for tab-completion:
 
 ```bash
 # Bash
 al completion bash > /etc/bash_completion.d/al
 
-# Zsh
+# Zsh (add to ~/.zshrc)
 al completion zsh > "${fpath[1]}/_al"
 
 # Fish
 al completion fish > ~/.config/fish/completions/al.fish
 ```
+
+## Building Releases
+
+To build binaries for all platforms:
+
+```bash
+./scripts/build.sh
+```
+
+This creates binaries in the `dist/` folder for:
+- macOS (Intel & Apple Silicon)
+- Linux (x86_64 & ARM64)
 
 ## Contributing
 
