@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aliasly - Configuration</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Aliasly</h1>
+            <p class="subtitle">Command Alias Manager</p>
+        </header>
+
+        <!-- Add New Alias Button -->
+        <div class="actions">
+            <button id="addAliasBtn" class="btn btn-primary">
+                + Add New Alias
+            </button>
+        </div>
+
+        <!-- Alias List -->
+        <div id="aliasList" class="alias-list">
+            <!-- Aliases will be rendered here by JavaScript -->
+            <p class="loading">Loading aliases...</p>
+        </div>
+
+        <!-- Modal for Add/Edit -->
+        <div id="modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle">Add New Alias</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+                <form id="aliasForm">
+                    <div class="form-group">
+                        <label for="aliasName">Alias Name *</label>
+                        <input type="text" id="aliasName" name="name" required
+                               pattern="[a-zA-Z][a-zA-Z0-9-]*"
+                               placeholder="e.g., gs, gc, deploy">
+                        <small>Letters, numbers, and hyphens only. Must start with a letter.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="aliasCommand">Command *</label>
+                        <input type="text" id="aliasCommand" name="command" required
+                               placeholder="e.g., git status">
+                        <small>Use {{name}} for parameters. Example: git commit -am "{{message}}"</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="aliasDescription">Description</label>
+                        <input type="text" id="aliasDescription" name="description"
+                               placeholder="e.g., Show git status">
+                    </div>
+
+                    <!-- Parameters Section -->
+                    <div class="form-group">
+                        <label>Parameters</label>
+                        <div id="paramsContainer">
+                            <!-- Parameters will be added here dynamically -->
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="addParamField()">
+                            + Add Parameter
+                        </button>
+                    </div>
+
+                    <!-- Preview -->
+                    <div class="preview">
+                        <label>Usage Preview:</label>
+                        <code id="usagePreview">al alias</code>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Alias</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="deleteModal" class="modal hidden">
+            <div class="modal-content modal-small">
+                <div class="modal-header">
+                    <h2>Delete Alias</h2>
+                    <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
+                </div>
+                <p>Are you sure you want to delete the alias "<span id="deleteAliasName"></span>"?</p>
+                <p class="warning">This action cannot be undone.</p>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
