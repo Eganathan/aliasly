@@ -506,6 +506,7 @@ async function loadAliases() {
 
     try {
         const aliases = await fetchAliases();
+        allAliases = aliases; // Store for search
         renderAliases(aliases);
     } catch (error) {
         container.textContent = '';
@@ -529,13 +530,22 @@ async function loadAliases() {
 // Event Listeners
 // ============================================
 
+// ============================================
+// Event Listeners
+// ============================================
+
 // When the page loads, fetch and display aliases
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize theme
+    initTheme();
+
     loadAliases();
 
     // Set up event listeners
-    document.getElementById('addAliasBtn').addEventListener('click', openAddModal);
+    document.getElementById('addAliasBtn').addEventListener('click', () => openAddModal());
     document.getElementById('aliasForm').addEventListener('submit', handleSubmit);
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    document.getElementById('searchInput').addEventListener('input', handleSearch);
 
     // Update preview when command changes (to detect {{params}})
     document.getElementById('aliasCommand').addEventListener('input', () => {
@@ -576,3 +586,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// ============================================
+// Theme Handling
+// ============================================
+
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        setTheme('dark');
+    } else {
+        setTheme('light');
+    }
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+}
+
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+
+    // Update icon visibility
+    const sunIcon = document.querySelector('.sun-icon');
+    const moonIcon = document.querySelector('.moon-icon');
+
+    if (theme === 'dark') {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+    } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+    }
+}
+
+// ============================================
+// Search Handling
+// ============================================
+
+let allAliases = [];
+
+function handleSearch(e) {
+    const query = e.target.value.toLowerCase();
+    const filtered = allAliases.filter(alias =>
+        alias.name.toLowerCase().includes(query) ||
+        alias.command.toLowerCase().includes(query) ||
+        (alias.description && alias.description.toLowerCase().includes(query))
+    );
+    renderAliases(filtered);
+}
