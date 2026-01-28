@@ -13,13 +13,13 @@ import (
 // It contains application settings and all defined aliases.
 type Config struct {
 	// Version is the config file format version (for future migrations)
-	Version int `mapstructure:"version" yaml:"version"`
+	Version int `mapstructure:"version" yaml:"version" json:"version"`
 
 	// Settings contains global application settings
-	Settings Settings `mapstructure:"settings" yaml:"settings"`
+	Settings Settings `mapstructure:"settings" yaml:"settings" json:"settings"`
 
 	// Aliases is the list of all defined command aliases
-	Aliases []Alias `mapstructure:"aliases" yaml:"aliases"`
+	Aliases []Alias `mapstructure:"aliases" yaml:"aliases" json:"aliases"`
 }
 
 // Settings contains global configuration options that affect
@@ -27,43 +27,43 @@ type Config struct {
 type Settings struct {
 	// Shell is the shell to use for executing commands (e.g., "/bin/bash")
 	// If empty, the default shell will be detected automatically
-	Shell string `mapstructure:"shell" yaml:"shell"`
+	Shell string `mapstructure:"shell" yaml:"shell" json:"shell"`
 
 	// Verbose, when true, prints the expanded command before running it
-	Verbose bool `mapstructure:"verbose" yaml:"verbose"`
+	Verbose bool `mapstructure:"verbose" yaml:"verbose" json:"verbose"`
 }
 
 // Alias represents a single command alias.
 // An alias maps a short name to a longer command, optionally with parameters.
 type Alias struct {
 	// Name is the short name for the alias (e.g., "gs" for git status)
-	Name string `mapstructure:"name" yaml:"name"`
+	Name string `mapstructure:"name" yaml:"name" json:"name"`
 
 	// Command is the actual command to run, may contain {{param}} placeholders
-	Command string `mapstructure:"command" yaml:"command"`
+	Command string `mapstructure:"command" yaml:"command" json:"command"`
 
 	// Description is a human-readable explanation of what this alias does
-	Description string `mapstructure:"description" yaml:"description"`
+	Description string `mapstructure:"description" yaml:"description" json:"description"`
 
 	// Params defines the parameters that this alias accepts
-	Params []Param `mapstructure:"params" yaml:"params,omitempty"`
+	Params []Param `mapstructure:"params" yaml:"params,omitempty" json:"params,omitempty"`
 }
 
 // Param represents a parameter that can be passed to an alias.
 // Parameters are substituted into the command using {{paramName}} syntax.
 type Param struct {
 	// Name is the parameter name, used in {{name}} placeholders
-	Name string `mapstructure:"name" yaml:"name"`
+	Name string `mapstructure:"name" yaml:"name" json:"name"`
 
 	// Description explains what this parameter is for
-	Description string `mapstructure:"description" yaml:"description"`
+	Description string `mapstructure:"description" yaml:"description" json:"description"`
 
 	// Required, when true, means this parameter must be provided
-	Required bool `mapstructure:"required" yaml:"required"`
+	Required bool `mapstructure:"required" yaml:"required" json:"required"`
 
 	// Default is the value to use if the parameter is not provided
 	// Only used when Required is false
-	Default string `mapstructure:"default" yaml:"default,omitempty"`
+	Default string `mapstructure:"default" yaml:"default,omitempty" json:"default,omitempty"`
 }
 
 // globalConfig holds the currently loaded configuration.
