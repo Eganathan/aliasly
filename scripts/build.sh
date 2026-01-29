@@ -5,7 +5,7 @@
 set -e
 
 # Get version from git tag or use default
-VERSION=${VERSION:-"0.1.4"}
+VERSION=${VERSION:-"0.1.5"}
 
 # Output directory
 OUT_DIR="dist"

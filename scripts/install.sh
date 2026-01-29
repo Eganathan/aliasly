@@ -77,8 +77,8 @@ fi
 
 # Fallback to known working version
 if [ -z "$LATEST_VERSION" ]; then
-    echo -e "${YELLOW}Warning: Could not fetch latest version, using v0.1.4${NC}"
-    LATEST_VERSION="v0.1.4"
+    echo -e "${YELLOW}Warning: Could not fetch latest version, using v0.1.5${NC}"
+    LATEST_VERSION="v0.1.5"
 fi
 
 echo "Latest version: ${LATEST_VERSION}"
