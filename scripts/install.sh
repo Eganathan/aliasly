@@ -59,11 +59,26 @@ echo "Detected: ${OS}/${ARCH}"
 
 # Get latest release version from GitHub
 echo "Fetching latest release..."
-LATEST_VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" 2>/dev/null | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/' || echo "")
 
+# Try to get latest version, with fallback
+LATEST_VERSION=""
+
+# Method 1: Try GitHub API
+LATEST_VERSION=$(curl -fsSL -H "Accept: application/vnd.github.v3+json" \
+    "https://api.github.com/repos/${REPO}/releases/latest" 2>/dev/null | \
+    grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/' || echo "")
+
+# Method 2: If API fails, try parsing releases page
 if [ -z "$LATEST_VERSION" ]; then
-    echo -e "${YELLOW}Warning: Could not fetch latest version, using v0.1.0${NC}"
-    LATEST_VERSION="v0.1.0"
+    LATEST_VERSION=$(curl -fsSL "https://github.com/${REPO}/releases" 2>/dev/null | \
+        grep -oE 'releases/tag/v[0-9]+\.[0-9]+\.[0-9]+' | head -1 | \
+        sed 's/releases\/tag\///' || echo "")
+fi
+
+# Fallback to known working version
+if [ -z "$LATEST_VERSION" ]; then
+    echo -e "${YELLOW}Warning: Could not fetch latest version, using v0.1.4${NC}"
+    LATEST_VERSION="v0.1.4"
 fi
 
 echo "Latest version: ${LATEST_VERSION}"
