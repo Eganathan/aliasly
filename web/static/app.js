@@ -546,6 +546,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('aliasForm').addEventListener('submit', handleSubmit);
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
     document.getElementById('searchInput').addEventListener('input', handleSearch);
+    document.getElementById('exportBtn').addEventListener('click', exportConfig);
+    document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFileInput').click());
+    document.getElementById('importFileInput').addEventListener('change', handleImport);
 
     // Update preview when command changes (to detect {{params}})
     document.getElementById('aliasCommand').addEventListener('input', () => {
@@ -639,4 +642,74 @@ function handleSearch(e) {
         (alias.description && alias.description.toLowerCase().includes(query))
     );
     renderAliases(filtered);
+}
+
+// ============================================
+// Import/Export Functions
+// ============================================
+
+/**
+ * Exports the config file by triggering a download.
+ */
+function exportConfig() {
+    // Create a link to download the config
+    const link = document.createElement('a');
+    link.href = '/api/config/export';
+    link.download = 'aliasly-config.yaml';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+/**
+ * Handles file import when user selects a file.
+ * @param {Event} event - The file input change event
+ */
+async function handleImport(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Confirm import
+    const confirmImport = confirm(
+        `Import "${file.name}"?\n\nNew aliases will be added to your existing configuration.\nAliases with the same name will be skipped.`
+    );
+
+    if (!confirmImport) {
+        event.target.value = ''; // Reset file input
+        return;
+    }
+
+    // Create form data
+    const formData = new FormData();
+    formData.append('config', file);
+
+    try {
+        const response = await fetch('/api/config/import', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+            throw new Error(result.error || 'Failed to import config');
+        }
+
+        // Update aliases from result
+        const importResult = result.data;
+        allAliases = importResult.aliases || [];
+        renderAliases(allAliases);
+
+        // Show result message
+        let message = `Import complete!\n\nAdded: ${importResult.added} alias(es)`;
+        if (importResult.skipped > 0) {
+            message += `\nSkipped: ${importResult.skipped} (already exist)`;
+        }
+        alert(message);
+    } catch (error) {
+        alert('Error importing config: ' + error.message);
+    }
+
+    // Reset file input so same file can be selected again
+    event.target.value = '';
 }

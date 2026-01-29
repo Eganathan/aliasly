@@ -109,6 +109,27 @@ al gp                     # Uses default value for optional param
 | `al remove <name>` | Remove an existing alias |
 | `al config` | Open web UI for visual management |
 
+### Backup & Restore
+
+| Command | Description |
+|---------|-------------|
+| `al export` | Print config to terminal |
+| `al export backup.yaml` | Save config to file |
+| `al import backup.yaml` | Merge aliases from file (adds new ones) |
+| `al import backup.yaml --replace` | Replace entire config from file |
+
+**Examples:**
+```bash
+# Create a backup
+al export > ~/aliasly-backup.yaml
+
+# Restore/merge from backup (adds new aliases, skips existing)
+al import ~/aliasly-backup.yaml
+
+# Completely replace config
+al import ~/aliasly-backup.yaml --replace
+```
+
 ### Command Flags
 
 ```bash

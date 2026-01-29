@@ -119,6 +119,23 @@ header {
     pointer-events: none;
 }
 
+/* Action buttons group */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.action-buttons .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.action-buttons .btn svg {
+    flex-shrink: 0;
+}
+
 /* Buttons */
 .btn {
     display: inline-flex;

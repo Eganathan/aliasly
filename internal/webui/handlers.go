@@ -2,10 +2,13 @@ package webui
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
+	"os"
 
 	"aliasly/internal/alias"
 	"aliasly/internal/config"
+	"go.yaml.in/yaml/v3"
 )
 
 // APIResponse is a standard response format for our API.
@@ -172,5 +175,107 @@ func sendError(w http.ResponseWriter, status int, message string) {
 	sendJSON(w, status, APIResponse{
 		Success: false,
 		Error:   message,
+	})
+}
+
+// handleExportConfig handles GET /api/config/export
+// It returns the full config file as YAML for download.
+func handleExportConfig(w http.ResponseWriter, r *http.Request) {
+	configPath := config.GetConfigFilePath()
+
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, "Failed to read config: "+err.Error())
+		return
+	}
+
+	// Set headers for file download
+	w.Header().Set("Content-Type", "application/x-yaml")
+	w.Header().Set("Content-Disposition", "attachment; filename=aliasly-config.yaml")
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
+}
+
+// ImportResult contains the result of an import operation.
+type ImportResult struct {
+	Added    int      `json:"added"`
+	Skipped  int      `json:"skipped"`
+	Aliases  []config.Alias `json:"aliases"`
+}
+
+// handleImportConfig handles POST /api/config/import
+// It accepts a YAML file and merges new aliases with existing ones.
+// Existing aliases with the same name are skipped (not replaced).
+func handleImportConfig(w http.ResponseWriter, r *http.Request) {
+	// Limit upload size to 1MB
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
+
+	// Parse multipart form
+	if err := r.ParseMultipartForm(1 << 20); err != nil {
+		sendError(w, http.StatusBadRequest, "Failed to parse form: "+err.Error())
+		return
+	}
+
+	// Get the uploaded file
+	file, _, err := r.FormFile("config")
+	if err != nil {
+		sendError(w, http.StatusBadRequest, "No file uploaded: "+err.Error())
+		return
+	}
+	defer file.Close()
+
+	// Read file content
+	data, err := io.ReadAll(file)
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, "Failed to read file: "+err.Error())
+		return
+	}
+
+	// Validate YAML structure
+	var importedConfig config.Config
+	if err := yaml.Unmarshal(data, &importedConfig); err != nil {
+		sendError(w, http.StatusBadRequest, "Invalid YAML format: "+err.Error())
+		return
+	}
+
+	// Get current aliases to check for duplicates
+	currentAliases, err := alias.GetAll()
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, "Failed to load current config: "+err.Error())
+		return
+	}
+
+	// Build map of existing alias names
+	existing := make(map[string]bool)
+	for _, a := range currentAliases {
+		existing[a.Name] = true
+	}
+
+	// Merge: add only new aliases
+	added := 0
+	skipped := 0
+	for _, a := range importedConfig.Aliases {
+		if existing[a.Name] {
+			skipped++
+			continue
+		}
+		if err := config.AddAlias(a); err != nil {
+			// Skip on error but continue with others
+			skipped++
+			continue
+		}
+		added++
+	}
+
+	// Get updated aliases
+	allAliases, _ := alias.GetAll()
+
+	sendJSON(w, http.StatusOK, APIResponse{
+		Success: true,
+		Data: ImportResult{
+			Added:   added,
+			Skipped: skipped,
+			Aliases: allAliases,
+		},
 	})
 }

@@ -54,6 +54,12 @@ func (s *Server) setupRoutes() {
 	// DELETE /api/aliases/{name} - Delete an alias
 	s.mux.HandleFunc("DELETE /api/aliases/{name}", handleDeleteAlias)
 
+	// GET /api/config/export - Export config as YAML file
+	s.mux.HandleFunc("GET /api/config/export", handleExportConfig)
+
+	// POST /api/config/import - Import config from YAML file
+	s.mux.HandleFunc("POST /api/config/import", handleImportConfig)
+
 	// Serve static files (HTML, CSS, JS)
 	// We need to strip the "static" prefix because the files are
 	// embedded under "static/" but we want to serve them from "/"
