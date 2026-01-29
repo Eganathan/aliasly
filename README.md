@@ -1,24 +1,25 @@
 # Aliasly
 
-A simple, cross-platform CLI tool for managing command aliases. Instead of typing long commands, create short aliases and run them with `al`.
+A simple, cross-platform CLI tool for managing command aliases. Type less, do more.
 
 ```bash
 # Instead of this:
 git commit -am "fix login bug"
 
-# Type this:
-al gc "fix login bug"
+# Just type:
+gc "fix login bug"
 ```
 
 ## Features
 
+- **No prefix needed** - Use `gs` directly, not `al gs` (shell integration)
 - **Simple aliasing** - Map short names to long commands
 - **Parameterized commands** - Use `{{param}}` placeholders for dynamic values
 - **Web-based configuration** - Visual UI for managing aliases (`al config`)
 - **Interactive CLI** - Add aliases through guided prompts (`al add`)
+- **Import/Export** - Backup and restore your aliases easily
 - **Cross-platform** - Works on macOS and Linux
 - **Single binary** - No dependencies, just one executable
-- **YAML config** - Human-readable configuration file
 
 ## Installation
 
@@ -64,24 +65,19 @@ sudo mv al /usr/local/bin/
 
 ## Quick Start
 
+After installation, aliases work directly without any prefix:
+
 ```bash
-# List all aliases (includes some defaults)
-al list
+# Use aliases directly (no 'al' prefix needed!)
+gs                       # runs: git status
+gc "fix bug"             # runs: git commit -am "fix bug"
+gp                       # runs: git push origin main
 
-# Run an alias
-al gs                    # runs: git status
-
-# Run with parameters
-al gc "fix bug"          # runs: git commit -am "fix bug"
-
-# Add a new alias interactively
-al add
-
-# Open web UI to manage aliases
-al config
-
-# Remove an alias
-al remove myalias
+# Management commands use 'al':
+al list                  # List all aliases
+al add                   # Add a new alias
+al config                # Open web UI
+al remove myalias        # Remove an alias
 ```
 
 ## Usage

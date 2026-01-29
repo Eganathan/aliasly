@@ -1,6 +1,6 @@
 #!/bin/bash
 # Aliasly Installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/yourusername/aliasly/main/scripts/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/Eganathan/aliasly/master/scripts/install.sh | bash
 
 set -e
 
@@ -13,9 +13,11 @@ BINARY_NAME="al"
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 echo ""
+echo -e "${BLUE}"
 echo "  ___  _ _           _       "
 echo " / _ \| (_)         | |      "
 echo "/ /_\ \ |_  __ _ ___| |_   _ "
@@ -24,7 +26,7 @@ echo "| | | | | | (_| \__ \ | |_| |"
 echo "\_| |_/_|_|\__,_|___/_|\__, |"
 echo "                        __/ |"
 echo "                       |___/ "
-echo ""
+echo -e "${NC}"
 echo "Aliasly Installer"
 echo ""
 
@@ -57,7 +59,7 @@ echo "Detected: ${OS}/${ARCH}"
 
 # Get latest release version from GitHub
 echo "Fetching latest release..."
-LATEST_VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+LATEST_VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" 2>/dev/null | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/' || echo "")
 
 if [ -z "$LATEST_VERSION" ]; then
     echo -e "${YELLOW}Warning: Could not fetch latest version, using v0.1.0${NC}"
@@ -81,7 +83,7 @@ trap "rm -rf $TMP_DIR" EXIT
 
 # Download
 echo "Downloading ${ARCHIVE}..."
-if ! curl -fsSL "$DOWNLOAD_URL" -o "${TMP_DIR}/${ARCHIVE}"; then
+if ! curl -fsSL "$DOWNLOAD_URL" -o "${TMP_DIR}/${ARCHIVE}" 2>/dev/null; then
     echo -e "${RED}Error: Failed to download from ${DOWNLOAD_URL}${NC}"
     echo ""
     echo "The release may not exist yet. You can build from source:"
@@ -99,7 +101,7 @@ else
     tar -xzf "$ARCHIVE"
 fi
 
-# Install
+# Install binary
 echo "Installing to ${INSTALL_DIR}..."
 if [ -w "$INSTALL_DIR" ]; then
     mv "$BINARY" "${INSTALL_DIR}/${BINARY_NAME}"
@@ -110,23 +112,96 @@ fi
 
 chmod +x "${INSTALL_DIR}/${BINARY_NAME}"
 
-# Verify installation
-if command -v al &> /dev/null; then
-    echo ""
-    echo -e "${GREEN}Aliasly installed successfully!${NC}"
-    echo ""
-    al --version
-    echo ""
-    echo "Get started:"
-    echo "  al list        # See default aliases"
-    echo "  al add         # Add a new alias"
-    echo "  al config      # Open web UI"
-    echo ""
-    echo "Run 'al --help' for more information."
-else
-    echo ""
-    echo -e "${GREEN}Installation complete!${NC}"
-    echo ""
-    echo "Make sure ${INSTALL_DIR} is in your PATH, then run:"
-    echo "  al --help"
+# Verify binary works
+if ! "${INSTALL_DIR}/${BINARY_NAME}" --version &>/dev/null; then
+    echo -e "${RED}Error: Installation failed - binary not working${NC}"
+    exit 1
 fi
+
+echo ""
+echo -e "${GREEN}Binary installed successfully!${NC}"
+
+# =============================================
+# Shell Integration
+# =============================================
+
+echo ""
+echo "Setting up shell integration..."
+
+# Detect shell config file
+SHELL_NAME=$(basename "$SHELL")
+case "$SHELL_NAME" in
+    zsh)
+        SHELL_CONFIG="$HOME/.zshrc"
+        ;;
+    bash)
+        if [ "$(uname)" = "Darwin" ] && [ -f "$HOME/.bash_profile" ]; then
+            SHELL_CONFIG="$HOME/.bash_profile"
+        else
+            SHELL_CONFIG="$HOME/.bashrc"
+        fi
+        ;;
+    fish)
+        SHELL_CONFIG="$HOME/.config/fish/config.fish"
+        mkdir -p "$(dirname "$SHELL_CONFIG")"
+        ;;
+    *)
+        SHELL_CONFIG="$HOME/.bashrc"
+        ;;
+esac
+
+# The line we need to add
+INIT_LINE='eval "$(al init)"'
+FISH_INIT_LINE='al init | source'
+
+# Check if already added
+if [ -f "$SHELL_CONFIG" ]; then
+    if grep -q "al init" "$SHELL_CONFIG" 2>/dev/null; then
+        echo "Shell integration already configured in $SHELL_CONFIG"
+    else
+        echo "Adding shell integration to $SHELL_CONFIG..."
+        echo "" >> "$SHELL_CONFIG"
+        echo "# Aliasly - command alias manager" >> "$SHELL_CONFIG"
+        if [ "$SHELL_NAME" = "fish" ]; then
+            echo "$FISH_INIT_LINE" >> "$SHELL_CONFIG"
+        else
+            echo "$INIT_LINE" >> "$SHELL_CONFIG"
+        fi
+        echo -e "${GREEN}Shell integration added!${NC}"
+    fi
+else
+    echo "Creating $SHELL_CONFIG with shell integration..."
+    if [ "$SHELL_NAME" = "fish" ]; then
+        echo "$FISH_INIT_LINE" > "$SHELL_CONFIG"
+    else
+        echo "# Aliasly - command alias manager" > "$SHELL_CONFIG"
+        echo "$INIT_LINE" >> "$SHELL_CONFIG"
+    fi
+    echo -e "${GREEN}Shell integration added!${NC}"
+fi
+
+# =============================================
+# Done!
+# =============================================
+
+echo ""
+echo -e "${GREEN}════════════════════════════════════════${NC}"
+echo -e "${GREEN}  Aliasly installed successfully!${NC}"
+echo -e "${GREEN}════════════════════════════════════════${NC}"
+echo ""
+"${INSTALL_DIR}/${BINARY_NAME}" --version
+echo ""
+echo "To activate now, run:"
+echo -e "  ${BLUE}source $SHELL_CONFIG${NC}"
+echo ""
+echo "Or just open a new terminal window."
+echo ""
+echo "Quick start:"
+echo "  al list        # See default aliases"
+echo "  al add         # Add a new alias"
+echo "  al config      # Open web UI"
+echo ""
+echo "After activation, use aliases directly:"
+echo "  gs             # instead of: al gs"
+echo "  gc \"message\"   # instead of: al gc \"message\""
+echo ""
