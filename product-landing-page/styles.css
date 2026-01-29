@@ -190,8 +190,10 @@ h1 span {
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
-  user-select: all;
-  cursor: text;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .install-cmd:hover {
@@ -203,6 +205,65 @@ h1 span {
   font-size: 0.9rem;
   color: var(--text-secondary);
   word-break: break-all;
+  user-select: all;
+}
+
+.copy-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.copy-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.copy-btn .icon-check {
+  display: none;
+  color: #22c55e;
+}
+
+.copy-btn.copied .icon-copy {
+  display: none;
+}
+
+.copy-btn.copied .icon-check {
+  display: block;
+}
+
+.copy-btn.copied {
+  border-color: #22c55e;
+}
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--bg-card);
+  border: 1px solid #22c55e;
+  color: var(--text-primary);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
 }
 
 /* Features Section */
@@ -541,10 +602,16 @@ footer {
   .install-cmd {
     flex-direction: column;
     text-align: center;
+    gap: 0.75rem;
   }
 
   .install-cmd code {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+  }
+
+  .copy-btn {
+    width: 100%;
+    padding: 0.75rem;
   }
 
   .section-header h2 {
