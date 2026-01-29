@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aliasly - Type Less, Do More</title>
+  <meta name="description" content="A cross-platform CLI tool that simplifies command management through alias creation. Map short names to long commands and boost your productivity.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="container">
+      <a href="#" class="logo">alias<span>ly</span></a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#demo">Demo</a></li>
+        <li><a href="#commands">Commands</a></li>
+        <li><a href="#config">Web Config</a></li>
+      </ul>
+      <a href="https://github.com/Eganathan/aliasly" target="_blank" class="github-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        GitHub
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <span class="badge">v0.1.5 — Open Source</span>
+      <h1>Type less, <span>do more</span></h1>
+      <p class="tagline">A cross-platform CLI tool that simplifies command management through alias creation. Map short names to frequently-used long commands.</p>
+      <div class="hero-buttons">
+        <a href="#commands" class="btn btn-primary">Get Started</a>
+        <a href="https://github.com/Eganathan/aliasly" target="_blank" class="btn btn-secondary">View on GitHub</a>
+      </div>
+      <div class="install-cmd">
+        <code>curl -fsSL https://raw.githubusercontent.com/Eganathan/aliasly/refs/heads/master/scripts/install.sh | bash</code>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>Why Aliasly?</h2>
+        <p>Built for developers who value their time and sanity</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>No Prefix Required</h3>
+          <p>Aliases execute directly in your shell. Just type <code>gs</code> instead of <code>al gs</code> or <code>git status</code>.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔧</div>
+          <h3>Parameterized Commands</h3>
+          <p>Support dynamic values using <code>{{param}}</code> placeholder syntax. Create flexible, reusable aliases.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>Web UI Configuration</h3>
+          <p>Visual interface accessible via <code>al config</code>. Manage your aliases without touching config files.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💾</div>
+          <h3>Import / Export</h3>
+          <p>Backup and restore alias configurations in YAML format. Share your setup across machines.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🖥️</div>
+          <h3>Cross-Platform</h3>
+          <p>Compatible with macOS (Apple Silicon & Intel) and Linux (x86_64 & ARM64) systems.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📦</div>
+          <h3>Single Binary</h3>
+          <p>Standalone executable with no external dependencies. Download and run—that's it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Section -->
+  <section class="demo" id="demo">
+    <div class="container">
+      <div class="demo-content">
+        <div class="demo-text">
+          <h2>See it in action</h2>
+          <p>Create aliases for your most-used commands and watch your productivity soar. No more typing out long git commands or complex build scripts.</p>
+          <p>With parameterized aliases, you can even pass dynamic values to your commands on the fly.</p>
+        </div>
+        <div class="demo-terminal">
+          <div class="terminal-header">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+          </div>
+          <div class="terminal-body">
+            <div class="terminal-line">
+              <span class="terminal-prompt">$ </span>
+              <span class="terminal-cmd">al add</span>
+            </div>
+            <div class="terminal-line terminal-output">
+              Alias name: gs<br>
+              Command: git status<br>
+              Description: Show git status<br>
+              ✓ Alias 'gs' created
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-prompt">$ </span>
+              <span class="terminal-cmd">gs</span>
+            </div>
+            <div class="terminal-line terminal-output">
+              On branch main<br>
+              Your branch is up to date.<br>
+              nothing to commit, working tree clean
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-prompt">$ </span>
+              <span class="terminal-cmd">gc "fix login bug"</span>
+            </div>
+            <div class="terminal-line terminal-output">
+              [main 3a2f1b8] fix login bug<br>
+              1 file changed, 5 insertions(+)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Commands Section -->
+  <section class="commands" id="commands">
+    <div class="container">
+      <div class="section-header">
+        <h2>CLI Commands</h2>
+        <p>Everything you need to manage your aliases from the terminal</p>
+      </div>
+      <div class="commands-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Command</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>al list</code></td>
+              <td>Display all configured aliases</td>
+            </tr>
+            <tr>
+              <td><code>al add</code></td>
+              <td>Create a new alias interactively</td>
+            </tr>
+            <tr>
+              <td><code>al remove &lt;name&gt;</code></td>
+              <td>Delete an existing alias</td>
+            </tr>
+            <tr>
+              <td><code>al config</code></td>
+              <td>Launch web-based configuration UI</td>
+            </tr>
+            <tr>
+              <td><code>al export [file]</code></td>
+              <td>Save configuration to file or stdout</td>
+            </tr>
+            <tr>
+              <td><code>al import &lt;file&gt;</code></td>
+              <td>Merge aliases from backup file</td>
+            </tr>
+            <tr>
+              <td><code>al completion [shell]</code></td>
+              <td>Generate shell completion scripts (bash|zsh|fish)</td>
+            </tr>
+            <tr>
+              <td><code>al --help</code></td>
+              <td>Display help documentation</td>
+            </tr>
+            <tr>
+              <td><code>al --version</code></td>
+              <td>Show installed version</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Web Config Section -->
+  <section class="web-config" id="config">
+    <div class="container">
+      <div class="config-content">
+        <div class="config-preview">
+          <h4>Alias Configuration</h4>
+          <div class="alias-item">
+            <span class="alias-name">gs</span>
+            <span class="alias-command">git status</span>
+          </div>
+          <div class="alias-item">
+            <span class="alias-name">gc</span>
+            <span class="alias-command">git commit -am "{{message}}"</span>
+          </div>
+          <div class="alias-item">
+            <span class="alias-name">gp</span>
+            <span class="alias-command">git push origin main</span>
+          </div>
+          <div class="alias-item">
+            <span class="alias-name">deploy</span>
+            <span class="alias-command">./deploy.sh {{env}}</span>
+          </div>
+        </div>
+        <div class="config-text">
+          <h2>Configure via Web UI</h2>
+          <p>Don't want to edit config files? No problem. Launch the built-in web interface with a single command and manage your aliases visually.</p>
+          <p>The web UI automatically detects parameters from your command templates and provides a clean interface for creating, editing, and deleting aliases.</p>
+          <ul class="config-features">
+            <li>Visual alias overview at a glance</li>
+            <li>Form-based alias creation</li>
+            <li>Auto-detection of parameters</li>
+            <li>Edit and delete with confirmation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="https://github.com/Eganathan/aliasly" target="_blank">GitHub</a>
+          <a href="https://github.com/Eganathan/aliasly/issues" target="_blank">Issues</a>
+          <a href="https://github.com/Eganathan/aliasly/releases" target="_blank">Releases</a>
+        </div>
+        <p class="footer-copy">Apache-2.0 License • Built with Go</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
