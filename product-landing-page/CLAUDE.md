@@ -9,14 +9,16 @@ This is the static landing page for **Aliasly** - a cross-platform CLI tool for 
 ## File Structure
 
 ```
-product-landing-page/
-├── index.html                    # Main landing page
-├── styles.css                    # Stylesheet
-├── CLAUDE.md                     # This context file
+aliasly/                          # Main repo root
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml            # GitHub Pages deployment workflow
-└── assets/                       # Images and icons (if any)
+│       └── pages.yml             # GitHub Pages deployment workflow
+├── product-landing-page/         # This folder
+│   ├── index.html                # Main landing page
+│   ├── styles.css                # Stylesheet
+│   ├── CLAUDE.md                 # This context file
+│   └── assets/                   # Images and icons (if any)
+└── ...                           # Other repo files
 ```
 
 ## Key Product Features to Highlight
@@ -59,11 +61,11 @@ product-landing-page/
 
 ## GitHub Pages Setup
 
-Deployment is automated via GitHub Actions (`.github/workflows/deploy.yml`).
+Deployment is automated via GitHub Actions (`/.github/workflows/pages.yml` at repo root).
 
 1. Go to repository Settings > Pages
 2. Set source to **"GitHub Actions"**
-3. Push to `main` or `master` branch to trigger deployment
-4. Site will be available at `https://eganathan.github.io/aliasly/` (or custom domain)
+3. Push changes to `product-landing-page/` folder to trigger deployment
+4. Site will be available at `https://eganathan.github.io/aliasly/`
 
-You can also manually trigger deployment via Actions > Deploy to GitHub Pages > Run workflow
+You can also manually trigger deployment via Actions > Deploy Landing Page > Run workflow
